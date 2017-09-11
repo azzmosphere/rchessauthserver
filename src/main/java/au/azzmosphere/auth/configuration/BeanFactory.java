@@ -1,21 +1,41 @@
 package au.azzmosphere.auth.configuration;
 
+import au.azzmosphere.auth.services.RChessUserDetailsService;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import javax.sql.DataSource;
+
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 @Configuration
 public class BeanFactory {
 
     @Bean
-    public UserDetailsService userDetailsService() throws Exception {
-        UserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("aaron").password("password").roles("USER").build());
-        return manager;
+    public UserDetailsService userDetailsService() {
+        return new RChessUserDetailsService();
     }
+
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder(11);
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider
+                = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(encoder());
+        return authProvider;
+    }
+
 }

@@ -9,6 +9,6 @@ CREATE TABLE robochessusers(
     password text NOT NULL,
     account_expires date NOT NULL,
     account_locked boolean NOT NULL DEFAULT false,
-    creditials_expired boolean NOT NULL DEFAULT false,
+    credentials_expires date NOT NULL,
     is_enabled boolean NOT NULL DEFAULT true
 );

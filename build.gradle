@@ -1,7 +1,21 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.6.RELEASE")
+        classpath "jp.classmethod.aws:gradle-aws-plugin:0.+"
+    }
+}
+
+
 group 'au.azzmosphere.auth'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: "idea"
+apply plugin: 'org.springframework.boot'
 
 sourceCompatibility = 1.8
 
@@ -9,19 +23,33 @@ repositories {
     mavenCentral()
 }
 
+bootRepackage {
+    mainClass = 'au.azzmosphere.auth.RoboChessAuthenticator'
+
+    // executable set to true stuffs up AWS for some reason.
+    // Turn this off for production or AWS.
+    executable = true
+}
+
+
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.6.RELEASE'
     compile 'org.springframework.security:spring-security-web:4.2.3.RELEASE'
     compile 'org.springframework.security:spring-security-config:4.2.3.RELEASE'
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
-    // https://mvnrepository.com/artifact/javax.persistence/persistence-api
-    compile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.postgresql:postgresql'
 
-    // https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa
-    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '1.11.6.RELEASE'
-
-    // https://mvnrepository.com/artifact/org.springframework.data/spring-data-releasetrain
-    compile group: 'org.springframework.data', name: 'spring-data-releasetrain', version: 'Hopper-SR11', ext: 'pom'
+//    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+//    compile group: 'org.postgresql', name: 'postgresql', version: '9.4-1206-jdbc42'
+//
+//    // https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa
+//    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '1.11.6.RELEASE'
+//
+//    // https://mvnrepository.com/artifact/javax.persistence/persistence-api
+//    compile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
+//
+//    // https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager
+//    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '4.3.11.Final'
 
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
