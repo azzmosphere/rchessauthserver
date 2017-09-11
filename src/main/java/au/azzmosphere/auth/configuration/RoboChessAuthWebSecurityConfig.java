@@ -25,7 +25,6 @@ public class RoboChessAuthWebSecurityConfig extends WebSecurityConfigurerAdapter
         .and().authorizeRequests().antMatchers("/create*").permitAll()
 
         // only system users can verify users
-        .and().authorizeRequests().antMatchers("/verify**").hasRole("SYSTEM")
-        ;
+        .and().authorizeRequests().antMatchers("/verify**").hasRole("SYSTEM");
     }
 }
