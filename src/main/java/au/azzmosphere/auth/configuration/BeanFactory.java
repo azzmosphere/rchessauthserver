@@ -1,6 +1,7 @@
 package au.azzmosphere.auth.configuration;
 
-import au.azzmosphere.auth.services.RChessUserDetailsService;
+import au.azzmosphere.auth.services.RChessJwtTokenFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,9 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class BeanFactory {
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new RChessUserDetailsService();
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    public void setUserDetailsService(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -26,9 +29,13 @@ public class BeanFactory {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(encoder());
         return authProvider;
     }
 
+    @Bean
+    public RChessJwtTokenFactory tokenFactory() {
+        return new RChessJwtTokenFactory();
+    }
 }
